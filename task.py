@@ -20,3 +20,37 @@
 #When you are done upload this code to your github repository. 
 #The whole repository MUST be a fork from https://github.com/mwmajew/kol1_gr2
 #Good Luck
+
+from random import uniform
+import time
+
+class Plane():
+	def __init__(self, orientation):
+		self.orientation = orientation
+		self.prev_orientation = 0
+
+	def tilt(self, tilt):
+		self.prev_orientation = self.orientation
+		self.orientation += tilt
+
+	def get_orientation(self):
+		return self.orientation
+
+	def correct(self):
+		if(self.orientation < 0):
+			self.orientation += (self.prev_orientation - self.orientation) * 2
+		if(self.orientation > 0):
+			self.orientation -= (self.prev_orientation - self.orientation) * 2
+
+plane = Plane(0)
+
+while True:
+	pass
+	print("angle: " + str(plane.get_orientation()))
+	tilt = uniform(-2, 2)
+
+	plane.tilt(tilt)
+	time.sleep(1)
+
+
+
