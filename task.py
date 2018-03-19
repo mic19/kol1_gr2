@@ -21,36 +21,32 @@
 #The whole repository MUST be a fork from https://github.com/mwmajew/kol1_gr2
 #Good Luck
 
-from random import uniform
+from random import gauss
+from plane import *
 import time
+import multiprocessing as mp
 
-class Plane():
-	def __init__(self, orientation):
-		self.orientation = orientation
-		self.prev_orientation = 0
+def simulator(plane):
+	print("{:*^80}".format(" FLIGHT SIMULATOR ", 'centered'))
+	angle_text = "\rangle between winds and ground: "
+	correction_text = "; value used to correct tilt: "
+	
+	while True:
+		angle = str(plane.get_orientation())
+		correction = str(plane.get_correction())
+		data_to_print = "{0}{1:.5}{2}{3:.5}"
+		data_to_print = data_to_print.format(angle_text, angle, correction_text, correction)
+		print(data_to_print, end="")
+		
+		tilt = gauss(0, 1)
+		plane.tilt(tilt)
+		plane.correct()
+		time.sleep(1)
 
-	def tilt(self, tilt):
-		self.prev_orientation = self.orientation
-		self.orientation += tilt
+if __name__ == "__main__":
+	plane = Plane(0)
 
-	def get_orientation(self):
-		return self.orientation
-
-	def correct(self):
-		if(self.orientation < 0):
-			self.orientation += (self.prev_orientation - self.orientation) * 2
-		if(self.orientation > 0):
-			self.orientation -= (self.prev_orientation - self.orientation) * 2
-
-plane = Plane(0)
-
-while True:
-	pass
-	print("angle: " + str(plane.get_orientation()))
-	tilt = uniform(-2, 2)
-
-	plane.tilt(tilt)
-	time.sleep(1)
-
-
-
+	p = mp.Process(target=simulator, args=(plane,))
+	p.start()
+	p.join()
+	
